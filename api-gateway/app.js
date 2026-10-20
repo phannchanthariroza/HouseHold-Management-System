@@ -84,19 +84,6 @@ proxy("/api/chores", process.env.CHORE_URL || "http://localhost:3004", "/chores"
   PATCH: ["Admin", "Member"],
   DELETE: ["Admin"]
 });
-proxy("/api/expenses", process.env.EXPENSE_URL || "http://localhost:3005", "/expenses", {
-  GET: ["Admin", "Member"],
-  POST: ["Admin", "Member"],
-  PATCH: ["Admin", "Member"],
-  DELETE: ["Admin"]
-});
-proxy("/api/shopping-items", process.env.SHOPPING_LIST_URL || "http://localhost:3006", "/shopping-items", {
-  GET: ["Admin", "Member"],
-  POST: ["Admin", "Member"],
-  PATCH: ["Admin", "Member"],
-  DELETE: ["Admin"]
-});
-
 app.use((req, res) => res.status(404).json({
   success: false,
   message: "Gateway route not found"

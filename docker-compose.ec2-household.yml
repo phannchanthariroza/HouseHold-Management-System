@@ -1,0 +1,25 @@
+services:
+  household-service:
+    build: ./household-service
+    env_file: .env
+    environment:
+      PORT: 3003
+    ports:
+      - "3003:3003"
+    restart: unless-stopped
+    networks: [backend-net]
+
+  chore-service:
+    build: ./chore-service
+    env_file: .env
+    environment:
+      PORT: 3004
+      INSTANCE_NAME: chore-ec2-2
+    ports:
+      - "3004:3004"
+    restart: unless-stopped
+    networks: [backend-net]
+
+networks:
+  backend-net:
+    driver: bridge

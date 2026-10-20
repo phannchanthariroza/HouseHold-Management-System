@@ -8,8 +8,6 @@ services:
       LOGIN_URL: http://login-service:3002
       HOUSEHOLD_URL: http://household-service:3003
       CHORE_URL: http://chore-service:3004
-      EXPENSE_URL: http://expense-service:3005
-      SHOPPING_LIST_URL: http://shopping-list-service:3006
     ports:
       - "3000:3000"
     depends_on:
@@ -17,8 +15,6 @@ services:
       - login-service
       - household-service
       - chore-service
-      - expense-service
-      - shopping-list-service
     restart: unless-stopped
     networks: [household-net]
 
@@ -50,20 +46,6 @@ services:
     restart: unless-stopped
     networks: [household-net]
 
-  expense-service:
-    build: ./expense-service
-    env_file: .env
-    environment: { PORT: 3005 }
-    restart: unless-stopped
-    networks: [household-net]
-
-  shopping-list-service:
-    build: ./shopping-list-service
-    env_file: .env
-    environment: { PORT: 3006 }
-    restart: unless-stopped
-    networks: [household-net]
-
   nginx:
     image: nginx:1.27-alpine
     ports:
@@ -71,6 +53,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
+      - api-gateway
       - chore-service
     restart: unless-stopped
     networks: [household-net]

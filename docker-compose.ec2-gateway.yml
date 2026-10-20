@@ -1,0 +1,44 @@
+services:
+  registration-service:
+    build: ./registration-service
+    env_file: .env
+    environment: { PORT: 3001 }
+    restart: unless-stopped
+    networks: [gateway-net]
+
+  login-service:
+    build: ./login-service
+    env_file: .env
+    environment: { PORT: 3002 }
+    restart: unless-stopped
+    networks: [gateway-net]
+
+  api-gateway:
+    build: ./api-gateway
+    env_file: .env
+    environment:
+      PORT: 3000
+      REGISTRATION_URL: http://registration-service:3001
+      LOGIN_URL: http://login-service:3002
+      HOUSEHOLD_URL: ${HOUSEHOLD_URL}
+      CHORE_URL: ${CHORE_URL}
+    depends_on:
+      - registration-service
+      - login-service
+    restart: unless-stopped
+    networks: [gateway-net]
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx/nginx.ec2.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-gateway
+    restart: unless-stopped
+    networks: [gateway-net]
+
+networks:
+  gateway-net:
+    driver: bridge
