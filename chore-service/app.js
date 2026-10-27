@@ -9,6 +9,7 @@ app.use(express.json({ limit: "20kb" }));
 const instanceName = process.env.INSTANCE_NAME || "chore-service";
 
 app.use((req, res, next) => {
+  res.setHeader("X-Chore-Instance", instanceName);
   console.log(`[${instanceName}] ${req.method} ${req.originalUrl}`);
   next();
 });
